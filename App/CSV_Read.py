@@ -1,6 +1,5 @@
 import pandas
 import re
-import json
 
 
 class CSVRead:
@@ -46,4 +45,4 @@ class CSVRead:
 
 
 if __name__ == '__main__':
-    CSVRead('convertcsv.csv')
+    CSVRead('datos.csv')
