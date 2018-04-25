@@ -1,12 +1,13 @@
 import simplejson as js
 import re
-import time, datetime
+import time
+import datetime
 
 
 def del_coments(data, ch="#"):
     salida = ""
     for line in data.splitlines():
-        if (line.find(ch) > -1):
+        if line.find(ch) > -1:
             line = line[0:line.find(ch)]
         salida = salida + line + "\n"
     return salida
@@ -71,4 +72,4 @@ class JsonRead(object):
 
 if __name__ == "__main__":
     reader = JsonRead("configuration.json")
-    print reader.json
+    print (reader.json)
