@@ -1,0 +1,6 @@
+
+App/\.idea/
+
+venv/
+
+\.DS_Store
