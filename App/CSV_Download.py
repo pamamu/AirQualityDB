@@ -13,5 +13,5 @@ def drop_file(filename):
 
 
 if __name__ == '__main__':
-    download_file("http://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv")
+    download_file("http://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv","datos.txt")
 

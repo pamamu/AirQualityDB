@@ -34,16 +34,19 @@ def retrieve_data(repl, db_name, table_name):
         print document
 
 
+def drop_table(repl, db_name, table_name):
+    r.db(db_name).table_drop(table_name).run(repl)
+
+
+def exist_db(repl,db_name):
+    array = r.db_list().run(repl)
+    return db_name in array
+
+
 if __name__ == '__main__':
-    #TODO: Esto es una prueba. No tener en cuenta este fragmento de codigo
     connection = connect_db("localhost", 28015)
-    filename = 'datos.csv'
-    d.download_file("http://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv", filename)
-    data = csv.read_file(filename)
-    d.drop_file(filename)
-    drop_db(connection, 'test2')
     create_db(connection, 'test2')
     create_table(connection, 'test2', 'ejemplo')
-    insert_data(connection, 'test2', 'ejemplo', data)
-    retrieve_data(connection, 'test2', 'ejemplo')
+    drop_table(connection, 'test2', 'ejemplo')
+    drop_db(connection,'test2')
     close_db(connection)

@@ -1,12 +1,13 @@
 import pandas
 import re
 
-def read_file(filename):
+
+def read_file_data(filename):
     # Cargamos el contenido del fichero CSV
     data = pandas.read_csv(filename, sep=';', header=0)
 
     # Eliminamos las columnas PROVINCIA, MUNICIPIO y PUNTO_MUESTREO
-    data.drop(data.columns[[0, 1, 4]], axis=1, inplace=True)
+    data.drop(data.columns[[0, 1]], axis=1, inplace=True)
 
     # columnas es la cabecera del CSV quitando las columnas PROVINCIA, MUNICIPIO y PUNTO_MUESTREO
     columnas = [x for x in data.columns.get_values().tolist()]
@@ -30,18 +31,27 @@ def read_file(filename):
     valores_v_y_n= [x for i, x in enumerate(valores)]
 
     # Eliminamos las columnas de horas no validas y las columnas de valores no validas
-    data = data.drop(horas_no_validas, 1).drop(valores_v_y_n,1)
+    data = data.drop(horas_no_validas, 1).drop(valores_v_y_n, 1)
 
-    # Lo mostramos en forma de DataFrame
-    #df = pandas.DataFrame(data)
-    #print df.columns
+    # Cambiamos el nombre de "PUNTO_MUESTREO" por "id" ya que es un identificador
+    data.rename(columns={'PUNTO_MUESTREO': 'id'}, inplace=True)
 
-    #TODO: Hay que seleccionar todas las estaciones y ponerles un unico identificador para que sean mas sencillas las busquedas
-    # Agrupamos por Estacion y creamos un diccionario
-    diccionario = data.groupby('ESTACION').apply(lambda dfg: dfg.to_dict(orient='list'))#.to_dict()
-    print(diccionario)
+    # Convertimos el DataFrame a un diccionario con forma de JSON
+    diccionario = data.to_dict(orient = 'records')
+
+    #print(diccionario)
     return diccionario
 
 
+def read_file_estaciones(filename):
+    # Cargamos el contenido del fichero CSV
+    data = pandas.read_csv(filename, sep=';', header=0)
+
+
+def read_file_magnitudes(filename):
+    # Cargamos el contenido del fichero CSV
+    data = pandas.read_csv(filename, sep=';', header=0)
+
+
 if __name__ == '__main__':
-    read_file('datos.csv')
+    read_file_data('datos.csv')
