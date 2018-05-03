@@ -37,7 +37,7 @@ def read_file_data(filename):
     data.rename(columns={'PUNTO_MUESTREO': 'id'}, inplace=True)
 
     # Convertimos el DataFrame a un diccionario con forma de JSON
-    diccionario = data.to_dict(orient = 'records')
+    diccionario = data.to_dict(orient='records')
 
     #print(diccionario)
     return diccionario
@@ -45,14 +45,21 @@ def read_file_data(filename):
 
 def read_file_estaciones(filename):
     # Cargamos el contenido del fichero CSV
-    data = pandas.read_csv(filename, sep=';', header=0)
-
+    data = pandas.read_csv(filename, sep=';', header=0,encoding = 'utf8')
+    diccionario = data.to_dict(orient='records')
+    print diccionario
+    return diccionario
 
 
 def read_file_magnitudes(filename):
     # Cargamos el contenido del fichero CSV
-    data = pandas.read_csv(filename, sep=';', header=0)
+    data = pandas.read_csv(filename, sep=';', header=0, encoding = 'utf8')
+    diccionario = data.to_dict(orient='records')
+    print diccionario
+    return diccionario
 
 
 if __name__ == '__main__':
-    read_file_data('datos.csv')
+    read_file_data('data.csv')
+    read_file_estaciones('stations.csv')
+    read_file_magnitudes('mag.csv')

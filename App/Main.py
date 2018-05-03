@@ -6,7 +6,7 @@ import CSV_Read as csv
 connection = r.connect_db("localhost", 28015)
 
 # Nombre del fichero
-filename_data = 'datos.csv'
+filename_data = 'data.csv'
 filename_magnitudes = 'mag.csv'
 filename_estaciones = 'stations.csv'
 
@@ -17,15 +17,15 @@ table_mag = 'magnitudes'
 table_sta = 'estaciones'
 
 # Descarga del fichero
-#d.download_file("http://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv", filename)
+d.download_file("http://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv", filename_data)
 
 # Procesado del fichero de datos en 'data', de magnitudes en 'magnitudes' y de estaciones en 'estaciones'
 data = csv.read_file_data(filename_data)
-#magnitudes = csv.read_file_magnitudes(filename_magnitudes)
-#estaciones = csv.read_file_estaciones(filename_estaciones)
+magnitudes = csv.read_file_magnitudes(filename_magnitudes)
+estaciones = csv.read_file_estaciones(filename_estaciones)
 
 # Una vez procesado, borramos el fichero
-#d.drop_file(filename)
+d.drop_file(filename_data)
 
 # Si existe la base de datos la borramos
 if r.exist_db(connection, db_name):
@@ -40,9 +40,13 @@ r.create_table(connection, db_name, table_mag)
 
 # Insertamos los datos obtenidos del CSV descargado
 r.insert_data(connection, db_name, table_data, data)
+r.insert_data(connection, db_name, table_mag, magnitudes)
+r.insert_data(connection, db_name, table_sta, estaciones)
 
 # Mostramos los datos desde la BD
 r.retrieve_data(connection, db_name, table_data)
+r.retrieve_data(connection, db_name, table_mag)
+r.retrieve_data(connection, db_name, table_sta)
 
 # Cerramos la conexion
 r.close_db(connection)

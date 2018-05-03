@@ -1,0 +1,25 @@
+﻿id;estacion;direccion;longitud;latitud;altitud;tipo_estacion;no2;so2;co;pm10;pm2.5;o3;btx;hc;uv;vv;dv;tmp;hr;prb;rs;ll
+4;Pza. de España;Plaza de España;-3.122472;40.4238528;635;UT;x;x;x;o;o;o;o;o;o;x;x;x;x;o;o;x
+8;Escuelas Aguirre;Entre C/ Alcalá y C/ O' Donell;-3.6814861;40.4215639;670;UT;x;x;x;x;x;x;x;x;o;o;o;o;o;o;o;o
+11;Avda. Ramón y Cajal;Avda. Ramón y Cajal  esq. C/ Príncipe de Vergara;-3.6773555;40.451475;708;UT;x;o;o;o;o;o;x;o;o;o;o;o;o;o;o;x
+16;Arturo Soria;C/ Arturo Soria  esq. C/  Vizconde de los Asilos;-3.6392333;40.4400472;693;UF;x;o;x;o;o;x;o;o;o;o;o;o;o;o;o;x
+17;Villaverde;C/ Juan Peñalver;-3.7133222;40.3471389;604;UF;x;x;o;o;o;x;o;o;o;o;o;o;o;o;o;o
+18;Farolillo;Calle Farolillo - C/Ervigio;-3.7318527;40.3947806;630;UF;x;x;x;x;o;x;x;o;o;o;o;x;o;o;o;x
+24;Casa de Campo;Casa de Campo (Terminal del Teleférico);-3.7473472;40.4192444;642;S;x;x;x;x;x;x;x;x;x;x;x;x;x;x;x;x
+27;Barajas Pueblo;C/ Júpiter,21 (Barajas);-3.5800306;40.4769278;621;UF;x;o;o;o;o;x;o;o;o;o;o;o;o;o;o;o
+35;Pza. del Carmen;Plaza del Carmen esq. Tres Cruce;-3.7031722;40.4192083;659;UF;x;x;x;o;o;x;o;o;o;o;o;o;o;o;o;o
+36;Moratalaz;Avd. Moratalaz esq. Camino de los Vinateros;-3.7071278;40.4079472;685;UT;x;x;x;x;o;o;o;o;o;o;o;o;o;o;o;x
+38;Cuatro Caminos;Avda. Pablo Iglesias esq. C/ Marqués de Lema;-3.7071278;40.4455444;698;UT;x;x;o;x;x;o;x;o;o;o;o;x;o;o;o;x
+39;Barrio del Pilar;Avd. Betanzos esq. C/  Monforte de Lemos;-3.7115417;40.4782278;674;UT;x;o;x;o;o;x;o;o;o;o;o;o;o;o;o;x
+40;Vallecas;C/ Arroyo del Olivar  esq. C/  Río Grande;-3.6515222;40.3881528;677;UF;x;x;o;x;o;o;o;o;o;o;o;o;o;o;o;x
+47;Méndez Álvaro;C/ Juan de Mariana / Pza. Amanecer Mendez Alvaro;-3.686825;40.3981139;599;UF;x;o;o;x;x;o;o;o;o;o;o;o;o;o;o;o
+48;Castellana;C/ Jose Gutierrez Abascal;-3.6903666;40.4398972;676;UT;x;o;o;x;x;o;o;o;o;o;o;o;o;o;o;o
+49;Parque del Retiro;Paseo Venezuela - Casa de Vacas;-3.6825833;40.4144444;662;UF;x;o;o;o;o;x;o;o;o;o;o;o;o;o;o;o
+50;Plaza Castilla;Plaza Castilla (Canal);-3.6887833;40.4655722;728;UT;x;o;o;x;x;o;o;o;o;o;o;x;o;o;o;o
+54;Ensanche de Vallecas;Avda La Gavia / Avda. Las Suertes;-3.6121166;40.3729333;627;UF;x;o;o;o;o;x;o;o;x;x;x;x;o;o;o;x
+55;Urb. Embajada;C/ Riaño (Barajas);-3.5807472;40.4625306;618;UF;x;o;o;x;o;o;x;x;o;o;o;o;o;o;o;o
+56;Pza. Fernández Ladreda;Pza. Fernández Ladreda - Avda. Oporto;-3.7187277;40.3849639;604;UT;x;o;x;o;o;x;o;o;o;x;x;x;x;o;o;x
+57;Sanchinarro;C/ Princesa de Eboli esq C/ Maria Tudor;-3.6605028;40.4942083;700;UF;x;x;x;x;o;o;o;o;o;o;o;x;o;o;o;o
+58;El Pardo;Avda. La Guardia;-3.7746111;40.5180583;615;S;x;o;o;o;o;x;o;o;o;o;o;o;o;o;o;o
+59;Juan Carlos I;Parque Juan Carlos I (frente oficinas mantenimiento);-3.609072;40.46525;660;S;x;o;o;o;o;x;o;o;x;x;x;x;x;x;x;x
+60;Tres Olivos;Plaza Tres Olivos;-3.6897611;40.5005889;715;UF;x;o;o;x;o;x;o;o;o;o;o;o;o;x;o;x

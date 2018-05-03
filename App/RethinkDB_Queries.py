@@ -44,6 +44,7 @@ def exist_db(repl,db_name):
 
 
 if __name__ == '__main__':
+    # Incluir esta consulta: r.db("AirQuality").table("datos").eqJoin("ESTACION", r.db("AirQuality").table("estaciones"))
     connection = connect_db("localhost", 28015)
     create_db(connection, 'test2')
     create_table(connection, 'test2', 'ejemplo')
