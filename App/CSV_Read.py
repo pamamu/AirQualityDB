@@ -48,6 +48,7 @@ def read_file_estaciones(filename):
     data = pandas.read_csv(filename, sep=';', header=0)
 
 
+
 def read_file_magnitudes(filename):
     # Cargamos el contenido del fichero CSV
     data = pandas.read_csv(filename, sep=';', header=0)

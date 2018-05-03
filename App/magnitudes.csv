@@ -1,0 +1,18 @@
+﻿id;magnitud;abreviatura o formula;unidad medida;tecnica de medida
+1;Dióxido de Azufre;SO2;µg/m3;38 - Fluorescencia ultravioleta
+6;Monóxido de Carbono;CO;mg/m3;48 - Absorción infrarroja
+7;Monóxido de Nitrógeno;NO;µg/m3;08 - Quimioluminiscencia
+8;Dióxido de Nitrógeno;NO2;µg/m3;08 - Quimioluminiscencia
+9;Partículas < 2.5 µg;PM2.5;µg/m3;47 - Microbalanza
+10;Partículas < 10 µg;PM10;µg/m3;47 - Microbalanza
+12;Óxidos de Nitrógeno;Nox;µg/m3;08 - Quimioluminiscencia
+14;Ozono;O3;µg/m3;06 - Absorción ultravioleta
+20;Tolueno;TOL;µg/m3;59 - Cromatografía de gases
+30;Benceno;BEN;µg/m3;59 - Cromatografía de gases
+35;Etilbenceno;EBE;µg/m3;59 - Cromatografía de gases
+37;Metaxileno;MXY;µg/m3;59 - Cromatografía de gases
+38;Paraxileno;PXY;µg/m3;59 - Cromatografía de gases
+39;Ortoxileno;OXY;µg/m3;59 - Cromatografía de gases
+42;Hidrocarburos totales (hexano);TCH;mg/m3;02 - Ionización de llama
+43;Metano;CH4;mg/m3;02 - Ionización de llama
+44;Hidrocarburos no metánicos (hexano);NMHC;mg/m3;02 - Ionización de llama
