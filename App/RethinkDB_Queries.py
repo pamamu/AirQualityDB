@@ -46,16 +46,45 @@ def create_geospatial_index(conn, db_name, table_name, index_name):
 
 def nearest_point(conn, db_name, table_name, index_name, latitude, longitude):
     point = r.point(latitude, longitude)
-    nearest = r.db(db_name).table(table_name).get_nearest(point, index=index_name, max_results=1, unit='km').run(conn)
-    print nearest[0].get('doc').get('estacion')
+    nearest = r.db(db_name).table(table_name).get_nearest(point, index=index_name, max_results=1, unit='m').run(conn)
+    print ("Estacion mas cercana: "+nearest[0].get('doc').get('estacion')+". Esta a "+str(int(nearest[0].get('dist')))+" metros.")
 
 
 def exist_index(conn, db_name, table_name, index_name):
     return index_name in r.db(db_name).table(table_name).index_list().run(conn)
 
 
-def wait_index(conn, db_name,table_name,index_name):
+def wait_index(conn, db_name, table_name, index_name):
     r.db(db_name).table(table_name).index_wait(index_name).run(conn)
+
+
+def get_table(conn, db_name, table_name):
+    data = r.db(db_name).table(table_name).run(conn)
+    array = []
+    for d in data:
+        array.append(d)
+    return array
+
+
+def get_item(conn, db_name, table_name, id):
+    data = r.db(db_name).table(table_name).get(id).run(conn)
+    return data
+
+
+def get_datos_estacion(conn, db_name, id):
+    data = r.db(db_name).table("datos").eq_join("ESTACION", r.db("AirQuality").table("estaciones")).zip().filter({"ESTACION":id}).run(conn)
+    array = []
+    for d in data:
+        array.append(d)
+    return array
+
+
+def get_datos_estacion_magnitud(conn, db_name, id_estacion, id_magnitud):
+    data = r.db(db_name).table("datos").eq_join("ESTACION", r.db("AirQuality").table("estaciones")).zip().filter({"ESTACION":id_estacion}).filter({"MAGNITUD":id_magnitud}).run(conn)
+    array = []
+    for d in data:
+        array.append(d)
+    return array
 
 
 if __name__ == '__main__':
@@ -64,5 +93,5 @@ if __name__ == '__main__':
     create_db(connection, 'test2')
     create_table(connection, 'test2', 'ejemplo')
     drop_table(connection, 'test2', 'ejemplo')
-    drop_db(connection,'test2')
+    drop_db(connection, 'test2')
     close_db(connection)
