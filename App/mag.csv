@@ -5,7 +5,7 @@
 8;Dióxido de Nitrógeno;NO2;µg/m3;08 - Quimioluminiscencia
 9;Partículas < 2.5 µg;PM2.5;µg/m3;47 - Microbalanza
 10;Partículas < 10 µg;PM10;µg/m3;47 - Microbalanza
-12;Óxidos de Nitrógeno;Nox;µg/m3;08 - Quimioluminiscencia
+12;Óxidos de Nitrógeno;NOx;µg/m3;08 - Quimioluminiscencia
 14;Ozono;O3;µg/m3;06 - Absorción ultravioleta
 20;Tolueno;TOL;µg/m3;59 - Cromatografía de gases
 30;Benceno;BEN;µg/m3;59 - Cromatografía de gases

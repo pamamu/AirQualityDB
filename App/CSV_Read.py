@@ -1,5 +1,6 @@
 import pandas
 import re
+import rethinkdb as r
 
 
 def read_file_data(filename):
@@ -38,16 +39,20 @@ def read_file_data(filename):
 
     # Convertimos el DataFrame a un diccionario con forma de JSON
     diccionario = data.to_dict(orient='records')
-
-    #print(diccionario)
     return diccionario
 
 
 def read_file_estaciones(filename):
     # Cargamos el contenido del fichero CSV
     data = pandas.read_csv(filename, sep=';', header=0,encoding = 'utf8')
+    coordenadas = []
+    for index, row in data.iterrows():
+        lat = row['latitud']
+        lon = row['longitud']
+        coordenadas.append(r.point(lat, lon))
+    data_geo = pandas.DataFrame({'coordenadas': coordenadas})
+    data = pandas.concat([data, data_geo], axis=1)
     diccionario = data.to_dict(orient='records')
-    print diccionario
     return diccionario
 
 
@@ -55,7 +60,7 @@ def read_file_magnitudes(filename):
     # Cargamos el contenido del fichero CSV
     data = pandas.read_csv(filename, sep=';', header=0, encoding = 'utf8')
     diccionario = data.to_dict(orient='records')
-    print diccionario
+
     return diccionario
 
 

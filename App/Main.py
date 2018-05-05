@@ -44,9 +44,16 @@ r.insert_data(connection, db_name, table_mag, magnitudes)
 r.insert_data(connection, db_name, table_sta, estaciones)
 
 # Mostramos los datos desde la BD
-r.retrieve_data(connection, db_name, table_data)
-r.retrieve_data(connection, db_name, table_mag)
-r.retrieve_data(connection, db_name, table_sta)
+#r.retrieve_data(connection, db_name, table_data)
+#r.retrieve_data(connection, db_name, table_mag)
+#r.retrieve_data(connection, db_name, table_sta)
+
+# Creamos un indice geoespacial
+r.create_geospatial_index(connection, db_name, table_sta, 'coordenadas')
+r.wait_index(connection, db_name, table_sta, 'coordenadas')
+
+# Consultamos el punto mas cercano a Estacion Madrid Atocha Cercanias
+r.nearest_point(connection, db_name, table_sta, 'coordenadas', 40.4067092, -3.6930324)
 
 # Cerramos la conexion
 r.close_db(connection)
