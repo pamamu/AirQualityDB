@@ -1,4 +1,6 @@
 import rethinkdb as r
+from itertools import islice
+
 
 def connect_db(host, port):
     return r.connect(host, port).repl()
@@ -44,10 +46,13 @@ def create_geospatial_index(conn, db_name, table_name, index_name):
     r.db(db_name).table(table_name).index_create(index_name, geo=True).run(conn)
 
 
-def nearest_point(conn, db_name, table_name, index_name, latitude, longitude):
+def nearest_points(conn, db_name, table_name, index_name, latitude, longitude, points):
     point = r.point(latitude, longitude)
-    nearest = r.db(db_name).table(table_name).get_nearest(point, index=index_name, max_results=1, unit='m').run(conn)
-    print ("Estacion mas cercana: "+nearest[0].get('doc').get('estacion')+". Esta a "+str(int(nearest[0].get('dist')))+" metros.")
+    near = r.db(db_name).table(table_name).get_nearest(point, index=index_name, max_results=points, unit='m').run(conn)
+    array = []
+    for d in near:
+        array.append(d)
+    return array
 
 
 def exist_index(conn, db_name, table_name, index_name):

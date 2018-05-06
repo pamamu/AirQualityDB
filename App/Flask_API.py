@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import json
+from flask import request
 import RethinkDB_Queries as q
 app = Flask(__name__)
 
@@ -9,7 +10,7 @@ def hello_world():
     return 'Bienvenido a la API de AirQuality'
 
 
-@app.route('/estacion')
+@app.route('/api/estacion')
 def estaciones():
     connection = q.connect_db('localhost', 28015)
     data = q.get_table(connection, 'AirQuality', 'estaciones')
@@ -21,7 +22,8 @@ def estaciones():
     q.close_db(connection)
     return response
 
-@app.route('/estacion/<int:estacion>')
+
+@app.route('/api/estacion/<int:estacion>')
 def estacion_id(estacion):
     connection = q.connect_db('localhost', 28015)
     data = q.get_item(connection, 'AirQuality', 'estaciones', estacion)
@@ -34,7 +36,7 @@ def estacion_id(estacion):
     return response
 
 
-@app.route('/magnitud')
+@app.route('/api/magnitud')
 def magnitudes():
     connection = q.connect_db('localhost', 28015)
     data = q.get_table(connection, 'AirQuality', 'magnitudes')
@@ -46,7 +48,8 @@ def magnitudes():
     q.close_db(connection)
     return response
 
-@app.route('/magnitud/<int:magnitud>')
+
+@app.route('/api/magnitud/<int:magnitud>')
 def magnitud_id(magnitud):
     connection = q.connect_db('localhost', 28015)
     data = q.get_item(connection, 'AirQuality', 'magnitudes', magnitud)
@@ -59,7 +62,7 @@ def magnitud_id(magnitud):
     return response
 
 
-@app.route('/dato')
+@app.route('/api/dato')
 def datos():
     connection = q.connect_db('localhost', 28015)
     data = q.get_table(connection, 'AirQuality', 'datos')
@@ -71,7 +74,8 @@ def datos():
     q.close_db(connection)
     return response
 
-@app.route('/dato/<string:dato>')
+
+@app.route('/api/dato/<string:dato>')
 def dato_id(dato):
     connection = q.connect_db('localhost', 28015)
     data = q.get_item(connection, 'AirQuality', 'datos', dato)
@@ -84,7 +88,7 @@ def dato_id(dato):
     return response
 
 
-@app.route('/datos/<int:estacion>')
+@app.route('/api/datos/<int:estacion>')
 def datos_estacion(estacion):
     connection = q.connect_db('localhost', 28015)
     data = q.get_datos_estacion(connection, 'AirQuality', estacion)
@@ -97,10 +101,30 @@ def datos_estacion(estacion):
     return response
 
 
-@app.route('/datos/<int:estacion>/<int:magnitud>')
+@app.route('/api/datos/<int:estacion>/<int:magnitud>')
 def datos_estacion_magnitud(estacion, magnitud):
     connection = q.connect_db('localhost', 28015)
     data = q.get_datos_estacion_magnitud(connection, 'AirQuality', estacion, magnitud)
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    q.close_db(connection)
+    return response
+
+
+@app.route('/api/estacion/proximidad')
+def estaciones_proximas():
+    connection = q.connect_db('localhost', 28015)
+    numero_estaciones_cercanas = request.args.get('n')
+    if numero_estaciones_cercanas is None:
+        estaciones = 1
+    else:
+        estaciones = int(numero_estaciones_cercanas)
+    latitud = float(request.args.get('lat'))
+    longitud = float(request.args.get('lon'))
+    data = q.nearest_points(connection, 'AirQuality', 'estaciones', 'coordenadas', latitud, longitud, estaciones)
     response = app.response_class(
         response=json.dumps(data),
         status=200,
