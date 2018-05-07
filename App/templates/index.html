@@ -3,25 +3,9 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Vista</title>
+    <title>Calidad Aire</title>
 
-    <style type="text/css">
-        #map {
-            position: relative;
-        }
-
-        #lista {
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            z-index: 99;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-            background-color: white;
-        }
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>-->
 
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -36,80 +20,245 @@
             margin: 0;
             padding: 0;
         }
+
+        #map {
+            position: relative;
+        }
+
+        #lista {
+            position: absolute;
+            padding-right: 15px;
+            top: 50px;
+            left: 50px;
+            z-index: 99;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            background-color: white;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 </head>
 <body>
-<div id="lista"> AAA</div>
 
+
+<div ng-app="myApp" ng-controller="myCtrl">
+    <!--<div id="lista" ng-app="CalidadAireApp" ng-controller="controlador"> {{firstName}}</div>-->
+
+
+    <!--<div id="map"></div>-->
+
+    <div id="lista">
+        <p>Coordenadas del punto seleccionado:</p>
+        <p> - Latitud = <span id="latitud"></span> </p>
+        <p> - Longitud = <span id="longitud"></span> </p>
+        Estaciones más cercanas:
+
+
+        <ul id="data-list" class="collection">
+
+        </ul>
+
+    </div>
+</div>
 <div id="map"></div>
-
 
 <script>
 
-    var citymap = {
-        chicago: {
-            center: {lat: 41.878, lng: -87.629},
-            contaminacion: 2714856
-        },
-        newyork: {
-            center: {lat: 40.714, lng: -74.005},
-            contaminacion: 8405837
-        },
-        losangeles: {
-            center: {lat: 40.41, lng: -3.70},
-            contaminacion: 3857799
-        }
-    };
+    var estaciones = {{ estaciones | tojson }};
+        // console.log(estaciones);
+
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180)
+    }
+
+    function calculardistancias() {
+
+    }
 
     function initMap() {
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 13,
             center: {lat: 40.41, lng: -3.70},
             mapTypeId: 'terrain'
         });
 
+        var marcadorprincipal;
+
+        google.maps.event.addListener(map, 'click', function (e) {
+            if (marcadorprincipal) {
+                marcadorprincipal.setPosition(e["latLng"])
+            } else {
+                marcadorprincipal = new google.maps.Marker({
+                    position: e["latLng"],
+                    map: map
+                });
+            }
+            var res = String(e["latLng"]).replace(' ', '').replace('(', '').replace(')', '').split(',');
+            console.log(res);
+            document.getElementById('latitud').textContent = res[0];
+            document.getElementById('longitud').textContent = res[1];
+        });
+
+        // document.getElementById('lista').style.display = "none"
+
         // Construct the circle for each value in citymap.
         // Note: We scale the area of the circle based on the population.
-        for (var city in citymap) {
+
+        var markers = []
+        var infowindows = []
+
+        for (var estacion in estaciones) {
+            // console.log(estaciones[estacion]['latitud']);
+            // console.log(estaciones[estacion]['longitud']);
+            var centro = {lat: estaciones[estacion]['latitud'], lng: estaciones[estacion]['longitud']}
+            var nombre = estaciones[estacion]['estacion']
+            var datos = estaciones[estacion]['datos']
+            var output = '<h1>' + nombre +'</h1>'
+            var re = new RegExp("H..")
+            var ultima = ""
+
+
+            for (var dato in datos) {
+                var atrs = Object.keys(datos[dato]);
+                for (var magnitud in atrs) {
+                    if (re.test(atrs[magnitud])) {
+                        ultima = atrs[magnitud];
+                    }
+                }
+            }
+            var contaminacion = 0;
+
+
+            for (var dato in datos) {
+                output = output + '<p>' + datos[dato]["abreviatura o formula"] + ' = ' + datos[dato][ultima] + ' ' +
+                    datos[dato]["unidad medida"] + '</p>';
+                if (datos[dato]["abreviatura o formula"].localeCompare("NO2") == 0) {
+                    contaminacion = datos[dato][ultima];
+                }
+
+            }
+            // console.log(ultima);
+
+
+            // console.log(datos);
+
+
+            var infowindow = new google.maps.InfoWindow({
+              content: output
+            });
+
+            infowindows.push(infowindows)
+
+
+            var marker = new google.maps.Marker({
+                position: centro,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                title: nombre
+            });
+
+            markers.push(marker);
+
+            google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
+                return function() {
+                    infowindow.setContent(content);
+                    infowindow.open(map,marker);
+                };
+            })(marker,output,infowindow));
+
             // Add the circle for this city to the map.
-            var cityCircle = new google.maps.Circle({
-                strokeColor: '#b0c56f',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#b0c56f',
-                fillOpacity: 0.15,
-                map: map,
-                center: citymap[city].center,
-                radius: Math.sqrt(citymap[city].contaminacion) * 0.2
-            });
+            if (contaminacion < 20) {
+                var cityCircle = new google.maps.Circle({
+                    strokeColor: '#00c507',
+                    strokeOpacity: 0,
+                    strokeWeight: 2,
+                    fillColor: '#00C507',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: centro,
+                    radius: 1000
+                });
+            }
 
-            var cityCircle = new google.maps.Circle({
-                strokeColor: '#f3904f',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#f3904f',
-                fillOpacity: 0.25,
-                map: map,
-                center: citymap[city].center,
-                radius: Math.sqrt(citymap[city].contaminacion) * 0.15
-            });
+            if (contaminacion >= 20 && contaminacion < 80) {
+                var cityCircle = new google.maps.Circle({
+                    strokeColor: '#f3904f',
+                    strokeOpacity: 0,
+                    strokeWeight: 2,
+                    fillColor: '#f3904f',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: centro,
+                    radius: 1000
+                });
+            }
+            if (contaminacion >= 80) {
 
-            var cityCircle = new google.maps.Circle({
-                strokeColor: '#cc0000',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#cc0000',
-                fillOpacity: 0.35,
-                map: map,
-                center: citymap[city].center,
-                radius: Math.sqrt(citymap[city].contaminacion) * 0.1
-            });
+                var cityCircle = new google.maps.Circle({
+                    strokeColor: '#cc0000',
+                    strokeOpacity: 0,
+                    strokeWeight: 2,
+                    fillColor: '#cc0000',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: centro,
+                    radius: 1000
+                });
+            }
         }
-    }
+
+        var list = document.getElementById("data-list");
+        console.log(markers)
+         for(marcador in markers){
+            var elemento = document.createElement('li');
+            var title = markers[marcador]['title'];
+            elemento.appendChild(document.createTextNode(title));
+            // elemento.addEventListener("click",  function () {
+            //     alert(title)
+            // })
+             list.appendChild(elemento);
+         }
+
+    };
+
+    // initMap()
+
+    // var app = angular.module('myApp', []);
+    // app.controller('myCtrl', function ($scope) {
+    //     $scope.firstName = "AAA";
+    //     $scope.lastName = "Doe";
+    //     $scope.estaciones = citymap;
+    // });
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuD87FKmPpVFtDfD2YaWHdh1MirPUzwbw&callback=initMap">
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuD87FKmPpVFtDfD2YaWHdh1MirPUzwbw&callback=initMap">
+</script>
+<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.8.1/axios.min.js"></script>
+<script>
+    var dataList = document.getElementById('data-list');
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('nuevo_dato', function (data) {
+        window.location.reload();
+    });
+
+
 </script>
 </body>
 </html>

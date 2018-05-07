@@ -50,6 +50,7 @@ def read_file_estaciones(filename):
         lat = row['latitud']
         lon = row['longitud']
         coordenadas.append(r.point(lat, lon))
+    print(coordenadas)
     data_geo = pandas.DataFrame({'coordenadas': coordenadas})
     data = pandas.concat([data, data_geo], axis=1)
     diccionario = data.to_dict(orient='records')
@@ -65,6 +66,6 @@ def read_file_magnitudes(filename):
 
 
 if __name__ == '__main__':
-    read_file_data('data.csv')
+    # read_file_data('data.csv')
     read_file_estaciones('stations.csv')
-    read_file_magnitudes('mag.csv')
+    # read_file_magnitudes('mag.csv')

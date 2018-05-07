@@ -46,7 +46,7 @@ def create_geospatial_index(conn, db_name, table_name, index_name):
     r.db(db_name).table(table_name).index_create(index_name, geo=True).run(conn)
 
 
-def nearest_points(conn, db_name, table_name, index_name, latitude, longitude, points):
+def nearest_points(conn, db_name, table_name, index_name, latitude, longitude, points=1):
     point = r.point(latitude, longitude)
     near = r.db(db_name).table(table_name).get_nearest(point, index=index_name, max_results=points, unit='m').run(conn)
     array = []
