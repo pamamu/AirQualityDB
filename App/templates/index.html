@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Vista</title>
+
+    <style type="text/css">
+        #map {
+            position: relative;
+        }
+
+        #lista {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            z-index: 99;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            background-color: white;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="lista"> AAA</div>
+
+<div id="map"></div>
+
+
+<script>
+
+    var citymap = {
+        chicago: {
+            center: {lat: 41.878, lng: -87.629},
+            contaminacion: 2714856
+        },
+        newyork: {
+            center: {lat: 40.714, lng: -74.005},
+            contaminacion: 8405837
+        },
+        losangeles: {
+            center: {lat: 40.41, lng: -3.70},
+            contaminacion: 3857799
+        }
+    };
+
+    function initMap() {
+        // Create the map.
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: {lat: 40.41, lng: -3.70},
+            mapTypeId: 'terrain'
+        });
+
+        // Construct the circle for each value in citymap.
+        // Note: We scale the area of the circle based on the population.
+        for (var city in citymap) {
+            // Add the circle for this city to the map.
+            var cityCircle = new google.maps.Circle({
+                strokeColor: '#b0c56f',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#b0c56f',
+                fillOpacity: 0.15,
+                map: map,
+                center: citymap[city].center,
+                radius: Math.sqrt(citymap[city].contaminacion) * 0.2
+            });
+
+            var cityCircle = new google.maps.Circle({
+                strokeColor: '#f3904f',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#f3904f',
+                fillOpacity: 0.25,
+                map: map,
+                center: citymap[city].center,
+                radius: Math.sqrt(citymap[city].contaminacion) * 0.15
+            });
+
+            var cityCircle = new google.maps.Circle({
+                strokeColor: '#cc0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#cc0000',
+                fillOpacity: 0.35,
+                map: map,
+                center: citymap[city].center,
+                radius: Math.sqrt(citymap[city].contaminacion) * 0.1
+            });
+        }
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuD87FKmPpVFtDfD2YaWHdh1MirPUzwbw&callback=initMap">
+</script>
+</body>
+</html>
