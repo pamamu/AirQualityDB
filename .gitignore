@@ -4,3 +4,7 @@ App/\.idea/
 venv/
 
 \.DS_Store
+
+\.idea/
+
+*.pyc

@@ -65,34 +65,12 @@
 <script>
 
     var estaciones = {{ estaciones | tojson }};
-        // console.log(estaciones);
-
-    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2 - lat1);  // deg2rad below
-        var dLon = deg2rad(lon2 - lon1);
-        var a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        ;
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c; // Distance in km
-        return d;
-    }
-
-    function deg2rad(deg) {
-        return deg * (Math.PI / 180)
-    }
-
-    function calculardistancias() {
-
-    }
+    console.log(estaciones);
 
     function initMap() {
         // Create the map.
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
+            zoom: 12,
             center: {lat: 40.41, lng: -3.70},
             mapTypeId: 'terrain'
         });
@@ -108,10 +86,20 @@
                     map: map
                 });
             }
+
+
             var res = String(e["latLng"]).replace(' ', '').replace('(', '').replace(')', '').split(',');
-            console.log(res);
+            // console.log(res);
             document.getElementById('latitud').textContent = res[0];
             document.getElementById('longitud').textContent = res[1];
+
+            var request = axios.post('/distancia/', {
+                latitud: res[0],
+                longitud: res[1]
+            });
+            // request.then(function (data) {
+            //     console.log(data);
+            // });
         });
 
         // document.getElementById('lista').style.display = "none"
@@ -222,17 +210,17 @@
             }
         }
 
-        var list = document.getElementById("data-list");
-        console.log(markers)
-         for(marcador in markers){
-            var elemento = document.createElement('li');
-            var title = markers[marcador]['title'];
-            elemento.appendChild(document.createTextNode(title));
-            // elemento.addEventListener("click",  function () {
-            //     alert(title)
-            // })
-             list.appendChild(elemento);
-         }
+        // var list = document.getElementById("data-list");
+        // // console.log(markers)
+        //  for(marcador in markers){
+        //     var elemento = document.createElement('li');
+        //     var title = markers[marcador]['title'];
+        //     elemento.appendChild(document.createTextNode(title));
+        //     // elemento.addEventListener("click",  function () {
+        //     //     alert(title)
+        //     // })
+        //      list.appendChild(elemento);
+        //  }
 
     };
 
@@ -256,6 +244,20 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuD87FKmPpVFtDfD2YaWHdh1M
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('nuevo_dato', function (data) {
         window.location.reload();
+    });
+    socket.on('distancia', function (data) {
+        var elemento = document.createElement('li');
+        var title = data['estacion'];
+        var distancia = data['distancia'];
+        elemento.appendChild(document.createTextNode(title + ' - ' +  (Math.round(distancia * 100) / 100) + ' kms'));
+        elemento.addEventListener("click",  function () {
+                alert(title + ' - ' + data['direccion'])
+            })
+        dataList.appendChild(elemento);
+        // console.log(data)
+    });
+    socket.on('reset', function () {
+        dataList.innerHTML = ''
     });
 
 

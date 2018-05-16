@@ -1,7 +1,8 @@
 import RethinkDB_Queries as r
 import CSV_Download as d
 import CSV_Read as csv
-
+import json
+from math import cos, asin, sqrt, pi
 import rethinkdb as rdb
 
 from flask import Flask, g, render_template, make_response, request, redirect, url_for, jsonify
@@ -108,8 +109,10 @@ def show_info():
     estaciones_array = []
     for estacion in estaciones:
         datos_estacion = rdb.db('AirQuality').table('datos').eq_join("ESTACION",
-                                                    rdb.db("AirQuality").table("estaciones")).zip().filter(
-            {"ESTACION": estacion['id']}).eq_join("MAGNITUD", rdb.db("AirQuality").table('magnitudes')).zip().run(g.db_conn)
+                                                                     rdb.db("AirQuality").table(
+                                                                         "estaciones")).zip().filter(
+            {"ESTACION": estacion['id']}).eq_join("MAGNITUD", rdb.db("AirQuality").table('magnitudes')).zip().run(
+            g.db_conn)
 
         estacion['datos'] = []
         for dato_estacion in datos_estacion:
@@ -118,9 +121,63 @@ def show_info():
         # print(estacion)
         estaciones_array.append(estacion)
     datos = list(
-        rdb.db('calidad_aire').table('datos').order_by(index=rdb.desc('timestamp')).run(g.db_conn, time_format="raw"))
+        rdb.db('AirQuality').table('datos').run(g.db_conn, time_format="raw"))
     # print(datos)
     return render_template('index.html', datos=datos, estaciones=estaciones_array, magnitudes=magnitudes)
+
+
+def distance(lat1, lon1, lat2, lon2):
+    p = 0.017453292519943295
+    a = 0.5 - cos((lat2 - lat1) * p) / 2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2
+    return 12742 * asin(sqrt(a))
+
+
+@app.route('/distancia/', methods=['POST'])
+def recalcular_distancias():
+    data = json.loads(request.data)
+    longitud = data['longitud']
+    latitud = data['latitud']
+    # print(longitud)
+    # print(latitud)
+
+    estaciones = rdb.db(app.config['DB_NAME']).table('estaciones').run(g.db_conn)
+    # for estacion in estaciones:
+    #     print(estacion['coordenadas']['coordinates'])
+    magnitudes = None
+
+    estaciones_array = []
+    for estacion in estaciones:
+        # print(estacion['latitud'])
+        # print(estacion['longitud'])
+
+        datos_estacion = rdb.db('AirQuality').table('datos').eq_join("ESTACION",
+                                                                     rdb.db("AirQuality").table(
+                                                                         "estaciones")).zip().filter(
+            {"ESTACION": estacion['id']}).eq_join("MAGNITUD", rdb.db("AirQuality").table('magnitudes')).zip().run(
+            g.db_conn)
+
+        estacion['datos'] = []
+        for dato_estacion in datos_estacion:
+            estacion['datos'].append(dato_estacion)
+        estacion['distancia'] = distance(float(latitud), float(longitud), float(estacion['latitud']),
+                                         float(estacion['longitud']))
+
+        # print(estacion)
+        estaciones_array.append(estacion)
+    datos = list(
+        rdb.db('AirQuality').table('datos').run(g.db_conn, time_format="raw"))
+
+    estaciones_array = sorted(estaciones_array, key=lambda estacion: estacion['distancia'])
+    print(estaciones_array)
+    # print(datos)
+    # return render_template('index.html', datos=datos, estaciones=estaciones_array, magnitudes=magnitudes)
+    socketio.emit('reset')
+    for i, estacion in enumerate(estaciones_array):
+        if i > 4:
+            break
+        print(estacion)
+        socketio.emit('distancia', estacion)
+    return make_response('OK', 201)
 
 
 def cambios_datos():
@@ -130,7 +187,7 @@ def cambios_datos():
     estaciones = rdb.table("datos").changes().run(conn)
     # for chat in estaciones:
     #     chat['new_val']['estacion'] = str(chat['new_val']['estacion'])
-    #     socketio.emit('nuevo_dato')
+    socketio.emit('nuevo_dato')
 
 
 if __name__ == '__main__':
